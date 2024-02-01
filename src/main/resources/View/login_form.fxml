@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="root" prefHeight="572.0" prefWidth="834.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.Controller.loginController">
+   <children>
+      <ImageView fitHeight="594.0" fitWidth="888.0" layoutX="-13.0" layoutY="-22.0" opacity="0.9" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assests/newBG.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="116.0" fitWidth="110.0" layoutX="356.0" layoutY="117.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assests/User.png" />
+         </image>
+      </ImageView>
+      <Label alignment="CENTER_RIGHT" layoutX="300.0" layoutY="35.0" prefHeight="66.0" prefWidth="235.0" text="Live Chat" textAlignment="CENTER" textFill="#070000">
+         <font>
+            <Font name="DejaVu Serif Bold" size="30.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtUserName" alignment="CENTER" layoutX="247.0" layoutY="296.0" prefHeight="57.0" prefWidth="329.0" promptText="User Name" style="-fx-background-color: #d0d0d0;">
+         <font>
+            <Font name="DejaVu Serif Bold" size="18.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="TEXT" />
+         </cursor>
+      </TextField>
+      <JFXButton fx:id="btnlogin" alignment="CENTER" buttonType="RAISED" layoutX="356.0" layoutY="435.0" onAction="#btnLoginOnAction" prefHeight="40.0" prefWidth="124.0" style="-fx-background-color: #38d398;" text="Log In">
+         <font>
+            <Font name="Liberation Serif Bold" size="17.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </JFXButton>
+      <ImageView fitHeight="57.0" fitWidth="56.0" layoutX="307.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assests/2190416.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
