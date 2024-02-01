@@ -37,7 +37,7 @@ public class loginController {
             names.add(txtUserName.getText());
 
             Stage stage = new Stage();
-            stage.setScene(new Scene(FXMLLoader.load(this.getClass().getResource("/View/chat_room_form.fxml"))));
+            stage.setScene(new Scene(FXMLLoader.load(this.getClass().getResource("/View/ClientChatForm.fxml"))));
 
 
             stage.centerOnScreen();

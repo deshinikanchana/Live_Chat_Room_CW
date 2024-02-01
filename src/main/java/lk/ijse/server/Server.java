@@ -27,7 +27,7 @@ public class Server {
         while (!serverSocket.isClosed()){
             try{
                 socket = serverSocket.accept();
-                ClientHandler clientHandler = new ClientHandler(socket,clients);
+                ClientHandler clientHandler = new ClientHandler(socket);
                 clients.add(clientHandler);
                 System.out.println("client socket accepted "+socket.toString());
             } catch (IOException e){
