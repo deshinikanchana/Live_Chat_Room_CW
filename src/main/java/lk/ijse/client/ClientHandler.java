@@ -1,6 +1,5 @@
 package lk.ijse.client;
 
-import lk.ijse.Controller.chatRoomController;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -11,7 +10,6 @@ import java.util.List;
 
 public class ClientHandler implements Runnable {
     public static final List<ClientHandler> clientHandlerList = new ArrayList<>();
-    public static chatRoomController chatFormController;
     private final Socket socket;
     private final DataInputStream inputStream;
     private final DataOutputStream outputStream;

@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" prefHeight="572.0" prefWidth="834.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.Controller.loginController">
+<AnchorPane fx:id="pane" prefHeight="572.0" prefWidth="834.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.Controller.loginController">
    <children>
       <ImageView fitHeight="594.0" fitWidth="888.0" layoutX="-13.0" layoutY="-22.0" opacity="0.9" pickOnBounds="true" preserveRatio="true">
          <image>

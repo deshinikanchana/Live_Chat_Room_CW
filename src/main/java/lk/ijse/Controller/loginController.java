@@ -7,15 +7,17 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import lk.ijse.client.Client;
 import lk.ijse.server.Server;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 
 public class loginController {
-    public AnchorPane root;
+    public AnchorPane pane;
     public TextField txtUserName;
     private Server server;
 
@@ -32,32 +34,23 @@ public class loginController {
     }
 
     public void btnLoginOnAction(ActionEvent event) throws IOException {
-        if(!txtUserName.getText().isEmpty()) {
+       load();
+    }
 
+    private void load() throws IOException {
+        if (Pattern.matches("^[a-zA-Z\\s]+", txtUserName.getText())) {
             names.add(txtUserName.getText());
 
-            Stage stage = new Stage();
-            stage.setScene(new Scene(FXMLLoader.load(this.getClass().getResource("/View/ClientChatForm.fxml"))));
-
-
-            stage.centerOnScreen();
+            Client client = new Client(txtUserName.getText());
+            Thread thread = new Thread(client);
+            thread.start();
+            Stage stage = (Stage) pane.getScene().getWindow();
             stage.setTitle(txtUserName.getText() + " 's Chat Room");
-            stage.setOnCloseRequest(windowEvent -> {
-                for (String nm:names) {
-                    if(stage.getTitle().startsWith(nm)) {
-                        names.remove(nm);
-                        System.out.println(nm + " left from the chat !!!");
-                        return;
-                    }
-                }
-            });
             stage.show();
 
             txtUserName.setText(" ");
-
-
-        }else{
-            new Alert(Alert.AlertType.ERROR, "User Name Is Required !!!").show();
-        }
+        } else{
+        new Alert(Alert.AlertType.ERROR, "Valid User Name Is Required !!!").show();
+    }
     }
 }
