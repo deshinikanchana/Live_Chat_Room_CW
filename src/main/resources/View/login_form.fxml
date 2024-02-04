@@ -26,7 +26,7 @@
             <Font name="DejaVu Serif Bold" size="30.0" />
          </font>
       </Label>
-      <TextField fx:id="txtUserName" alignment="CENTER" layoutX="247.0" layoutY="296.0" prefHeight="57.0" prefWidth="329.0" promptText="User Name" style="-fx-background-color: #d0d0d0;">
+      <TextField fx:id="txtUserName" alignment="CENTER" layoutX="247.0" layoutY="296.0" onAction="#userNameOnAction" prefHeight="57.0" prefWidth="329.0" promptText="User Name" style="-fx-background-color: #ffffff;">
          <font>
             <Font name="DejaVu Serif Bold" size="18.0" />
          </font>

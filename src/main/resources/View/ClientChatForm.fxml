@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
@@ -21,7 +22,7 @@
             <Image url="@../assests/newBG.jpg" />
          </image>
       </ImageView>
-        <TextField fx:id="txtMsg" layoutX="64.0" layoutY="638.0" prefHeight="49.0" prefWidth="246.0" promptText="Enter message here" style="-fx-background-color: white; -fx-border-color: #F5F5F5;" />
+        <TextField fx:id="txtMsg" layoutX="60.0" layoutY="619.0" onAction="#txtmsgOnAction" prefHeight="50.0" prefWidth="247.0" promptText="Enter message here" style="-fx-background-color: white; -fx-border-color: #F5F5F5;" />
         <ScrollPane layoutX="14.0" layoutY="107.0" prefHeight="502.0" prefWidth="404.0">
             <content>
                 <VBox fx:id="vBox" prefHeight="489.0" prefWidth="397.0" />
@@ -46,37 +47,37 @@
             </GridPane>
          </children>
       </AnchorPane>
-          <ImageView blendMode="MULTIPLY" fitHeight="37.0" fitWidth="32.0" layoutX="364.0" layoutY="647.0" pickOnBounds="true" smooth="false">
+          <ImageView blendMode="MULTIPLY" fitHeight="37.0" fitWidth="32.0" layoutX="378.0" layoutY="623.0" pickOnBounds="true" smooth="false">
               <image>
                   <Image url="@../assests/send.png" />
               </image>
           </ImageView>
-      <JFXButton fx:id="btnSend" layoutX="361.0" layoutY="644.0" onAction="#btnSendOnAction" prefHeight="43.0" prefWidth="39.0" text=" ">
+      <JFXButton fx:id="btnSend" layoutX="375.0" layoutY="620.0" onAction="#btnSendOnAction" prefHeight="43.0" prefWidth="39.0" text=" ">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </JFXButton>
-      <ImageView blendMode="MULTIPLY" fitHeight="37.0" fitWidth="32.0" layoutX="319.0" layoutY="644.0" pickOnBounds="true" smooth="false">
+      <ImageView blendMode="MULTIPLY" fitHeight="37.0" fitWidth="32.0" layoutX="326.0" layoutY="626.0" pickOnBounds="true" smooth="false">
          <image>
             <Image url="@../assests/black-camera-icon-png.png" />
          </image>
       </ImageView>
-      <JFXButton fx:id="btnImage" layoutX="316.0" layoutY="641.0" onAction="#attachFileOnAction" prefHeight="43.0" prefWidth="39.0" text=" ">
+      <JFXButton fx:id="btnImage" layoutX="323.0" layoutY="623.0" onAction="#attachFileOnAction" prefHeight="43.0" prefWidth="39.0" text=" ">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </JFXButton>
-      <ImageView blendMode="MULTIPLY" fitHeight="31.0" fitWidth="32.0" layoutX="20.0" layoutY="650.0" pickOnBounds="true" smooth="false">
+      <ImageView blendMode="MULTIPLY" fitHeight="31.0" fitWidth="32.0" layoutX="11.0" layoutY="632.0" pickOnBounds="true" smooth="false">
          <image>
             <Image url="@../assests/imojis.png" />
          </image>
       </ImageView>
-      <JFXButton fx:id="btnEmoji" layoutX="17.0" layoutY="644.0" onAction="#btnImojiOnAction" prefHeight="43.0" prefWidth="39.0" text=" ">
+      <JFXButton fx:id="btnEmoji" layoutX="8.0" layoutY="626.0" onAction="#btnImojiOnAction" prefHeight="43.0" prefWidth="39.0" text=" ">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </JFXButton>
-      <ImageView fitHeight="31.0" fitWidth="32.0" layoutX="120.0" layoutY="13.0"  pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="31.0" fitWidth="32.0" layoutX="120.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../assests/2190416.png" />
          </image>
@@ -91,5 +92,10 @@
             <Font name="DejaVu Serif Bold" size="20.0" />
          </font>
       </Label>
+      <CheckBox fx:id="sinhalaSelectBox" layoutX="60.0" layoutY="676.0" mnemonicParsing="false" onAction="#onActionSelectBox" prefHeight="18.0" prefWidth="247.0" text="Text Convert To Sinhala Fonts">
+         <font>
+            <Font name="DejaVu Serif Bold" size="13.0" />
+         </font>
+      </CheckBox>
     </children>
 </AnchorPane>

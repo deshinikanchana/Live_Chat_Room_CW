@@ -1,9 +1,11 @@
 package lk.ijse.Controller;
-
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -12,54 +14,47 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import lk.ijse.client.ClientHandler;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import javafx.event.ActionEvent;
+import lk.ijse.sinhala.translationLogic;
+
+import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.nio.file.Files;
-import java.util.Objects;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 import static lk.ijse.Controller.loginController.names;
 
+
 public class chatRoomController {
     private final String[] emojis = {
-            "\uD83D\uDE00", // 😀
-            "\uD83D\uDE01", // 😁
-            "\uD83D\uDE02", // 😂
-            "\uD83D\uDE03", // 🤣
-            "\uD83D\uDE04", // 😄
-            "\uD83D\uDE05", // 😅
-            "\uD83D\uDE06", // 😆
-            "\uD83D\uDE07", // 😇
-            "\uD83D\uDE08", // 😈
-            "\uD83D\uDE09", // 😉
-            "\uD83D\uDE0A", // 😊
-            "\uD83D\uDE0B", // 😋
-            "\uD83D\uDE0C", // 😌
-            "\uD83D\uDE0D", // 😍
-            "\uD83D\uDE0E", // 😎
-            "\uD83D\uDE0F", // 😏
-            "\uD83D\uDE10", // 😐
-            "\uD83D\uDE11", // 😑
-            "\uD83D\uDE12", // 😒
-            "\uD83D\uDE13"  // 😓
+            "\uD83D\uDE00", "\uD83D\uDE01", "\uD83D\uDE02", "\uD83D\uDE03", "\uD83D\uDE04", "\uD83D\uDE05",
+            "\uD83D\uDE06", "\uD83D\uDE07", "\uD83D\uDE08", "\uD83D\uDE09", "\uD83D\uDE0A", "\uD83D\uDE0B",
+            "\uD83D\uDE0C", "\uD83D\uDE0D", "\uD83D\uDE0E", "\uD83D\uDE0F", "\uD83D\uDE10", "\uD83D\uDE11",
+            "\uD83D\uDE12", "\uD83D\uDE13"
     };
-    public Label lblName;
+
     public TextField txtMsg;
     public VBox vBox;
     public AnchorPane emojiAnchorpane;
     public GridPane emojiGridpane;
+    public Label lblName;
+    public javafx.scene.control.ScrollPane scrollPane;
+    public CheckBox sinhalaSelectBox;
+
     private Socket socket;
     private DataInputStream dataInputStream;
     private DataOutputStream dataOutputStream;
-    private String clientName = "Client";
+    private String clientName ;
+    public static String sendBy;
 
-    public void initialize() {
 
+
+    public void initialize(){
         clientName = names.get(names.size() - 1);
         lblName.setText(clientName);
 
@@ -80,26 +75,19 @@ public class chatRoomController {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    socket = new Socket("localhost", 3001);
+                try{
+                    socket = new Socket("localhost", 3030);
                     dataInputStream = new DataInputStream(socket.getInputStream());
                     dataOutputStream = new DataOutputStream(socket.getOutputStream());
-                    System.out.println(clientName + " joined.");
+                    System.out.println("Client connected");
+                    System.out.println(clientName+" joined.");
 
-                    while (socket.isConnected()) {
+                    while (socket.isConnected()){
                         String receivingMsg = dataInputStream.readUTF();
-                        String name = receivingMsg.split("-")[0];
-                        //receiveMessage(name + " : " + receivingMsg.split("-")[1], chatRoomController.this.txtArea);
-                        if (receivingMsg.equals("*image*")) {
-                            receiveImage();
-                        } else {
-                            writeMessage(receivingMsg);
-                        }
+                        receivingMsg(receivingMsg, chatRoomController.this.vBox);
                     }
-                } catch (UnknownHostException e) {
-                    throw new RuntimeException(e);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                }catch (IOException e){
+                    e.printStackTrace();
                 }
             }
         }).start();
@@ -109,7 +97,7 @@ public class chatRoomController {
     private JFXButton createEmojiButton(String emoji) {
         JFXButton button = new JFXButton(emoji);
         button.getStyleClass().add("emoji-button");
-        button.setOnAction(this::emojiButtonAction);
+        button.setOnAction(this::emojibtnonAction);
         button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         GridPane.setFillWidth(button, true);
         GridPane.setFillHeight(button, true);
@@ -117,123 +105,175 @@ public class chatRoomController {
         return button;
     }
 
-    private void emojiButtonAction(ActionEvent event) {
+    private void emojibtnonAction(ActionEvent event) {
         JFXButton button = (JFXButton) event.getSource();
         txtMsg.appendText(button.getText());
     }
 
-    public void sendMsg(String msg, String name) throws IOException {
-        ClientHandler.broadcast(name, msg);
-        dataOutputStream.writeUTF(msg);
-        dataOutputStream.flush();
-        txtMsg.setText(" ");
-    }
+    private void receivingMsg(String receivingMsg, VBox msgVbox) {
+        if (receivingMsg.matches(".*\\.(png|jpe?g|gif)$")){
 
-    public void sendImage(byte[] bytes) throws IOException {
-        dataOutputStream.writeUTF("*image*");
-        dataOutputStream.writeInt(bytes.length);
-        dataOutputStream.write(bytes);
-        dataOutputStream.flush();
-    }
+            Label Sender = new Label(sendBy);
+            File imageFile = new File(receivingMsg);
+            Image image = new Image(imageFile.toURI().toString());
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(200);
+            imageView.setFitWidth(200);
+            HBox hBox = new HBox();
+            hBox.setAlignment(Pos.CENTER_LEFT);
+            hBox.setPadding(new Insets(5, 5, 5, 10));
+            hBox.getChildren().addAll(Sender,imageView);
+            Platform.runLater(() -> {
+                msgVbox.getChildren().add(hBox);
 
-    public void writeMessage(String message) {
-        HBox hBox = new HBox();
-        hBox.setStyle("-fx-alignment: center-left;-fx-fill-height: true;-fx-min-height: 50;-fx-pref-width: 520;-fx-max-width: 520;-fx-padding: 10");
-        Label messageLbl = new Label(message);
-        messageLbl.setStyle("-fx-background-color:   #2980b9;-fx-background-radius:15;-fx-font-size: 18;-fx-font-weight: normal;-fx-text-fill: white;-fx-wrap-text: true;-fx-alignment: center-left;-fx-content-display: left;-fx-padding: 10;-fx-max-width: 350;");
-        hBox.getChildren().add(messageLbl);
-        Platform.runLater(() -> vBox.getChildren().add(hBox));
-    }
+            });
 
+        }else {
+            String name = receivingMsg.split(":")[0];
+            String msgFromServer = receivingMsg.split(":")[1];
 
-    private void receiveImage() throws IOException {
-        String utf = dataInputStream.readUTF();
-        int size = dataInputStream.readInt();
-        byte[] bytes = new byte[size];
-        dataInputStream.readFully(bytes);
-        System.out.println(clientName + "- Image received: from " + utf);
-        setImage(bytes, utf);
-    }
+            HBox hBox = new HBox();
+            hBox.setAlignment(Pos.CENTER_LEFT);
+            hBox.setPadding(new Insets(5,5,5,10));
 
-    private void setImage(byte[] bytes, String utf) {
-        HBox hBox = new HBox();
-        Label messageLbl = new Label(utf);
-        messageLbl.setStyle("-fx-background-color:   #2980b9;-fx-background-radius:15;-fx-font-size: 18;-fx-font-weight: normal;-fx-text-fill: white;-fx-wrap-text: true;-fx-alignment: center;-fx-content-display: left;-fx-padding: 10;-fx-max-width: 350;");
+            HBox hBoxName = new HBox();
+            hBoxName.setAlignment(Pos.CENTER_LEFT);
+            Text textName = new Text(name);
+            TextFlow textFlowName = new TextFlow(textName);
+            hBoxName.getChildren().add(textFlowName);
 
-        hBox.setStyle("-fx-fill-height: true; -fx-min-height: 50; -fx-pref-width: 520; -fx-max-width: 520; -fx-padding: 10; " + (utf.equals(lblName.getText()) ? "-fx-alignment: center-right;" : "-fx-alignment: center-left;"));
-        Platform.runLater(() -> {
-            ImageView imageView = new ImageView(new Image(new ByteArrayInputStream(bytes)));
-            imageView.setStyle("-fx-padding: 10px;");
-            imageView.setFitHeight(180);
-            imageView.setFitWidth(100);
+            Text text = new Text(msgFromServer);
+            TextFlow textFlow = new TextFlow(text);
+            textFlow.setStyle("-fx-background-color: #42B98D; -fx-font-weight: bold; -fx-background-radius: 20px");
+            textFlow.setPadding(new Insets(5,10,5,10));
+            text.setFill(Color.color(0,0,0));
 
-            hBox.getChildren().addAll(messageLbl, imageView);
-            vBox.getChildren().add(hBox);
-        });
-    }
+            hBox.getChildren().add(textFlow);
 
-    public void btnSendOnAction(ActionEvent event) throws IOException {
-        try {
-            emojiAnchorpane.setVisible(false);
-            String text = txtMsg.getText();
-            if ((text != " ") || (!Objects.equals(text, ""))) {
-                appendText(text);
-                sendMsg(text, lblName.getText());
-            } else {
-                ButtonType ok = new ButtonType("Ok");
-                ButtonType cancel = new ButtonType("Cancel");
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Empty message. Is it ok?", ok, cancel);
-                alert.showAndWait();
-                ButtonType result = alert.getResult();
-                if (result.equals(ok)) {
-                    sendMsg(null, null);
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    msgVbox.getChildren().add(hBoxName);
+                    msgVbox.getChildren().add(hBox);
                 }
-                txtMsg.setText(" ");
-            }
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            });
         }
     }
 
-    private void appendText(String text) {
-        HBox hBox = new HBox();
-        hBox.setStyle("-fx-alignment: center-right;-fx-fill-height: true;-fx-min-height: 50;-fx-pref-width: 520;-fx-max-width: 520;-fx-padding: 10");
-        Label messageLbl = new Label(text);
-        messageLbl.setStyle("-fx-background-color:  purple;-fx-background-radius:15;-fx-font-size: 18;-fx-font-weight: normal;-fx-text-fill: white;-fx-wrap-text: true;-fx-alignment: center-left;-fx-content-display: left;-fx-padding: 10;-fx-max-width: 350;");
-        hBox.getChildren().add(messageLbl);
-        vBox.getChildren().add(hBox);
-    }
+    private void sendMsg(String msgToSend) {
+        if (!msgToSend.isEmpty()){
+            if(!msgToSend.matches(".*\\.(png|jpe?g|gif)$")){
 
-    public void btnImojiOnAction(ActionEvent event) {
-        emojiAnchorpane.setVisible(!emojiAnchorpane.isVisible());
-    }
-
-
-    public void attachFileOnAction(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Image File");
-        FileChooser.ExtensionFilter imageFilter = new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg");
-        fileChooser.getExtensionFilters().add(imageFilter);
-        File selectedFile = fileChooser.showOpenDialog(new Stage());
-        if (selectedFile != null) {
-            try {
-                byte[] bytes = Files.readAllBytes(((File) selectedFile).toPath());
                 HBox hBox = new HBox();
-                hBox.setStyle("-fx-fill-height: true; -fx-min-height: 50; -fx-pref-width: 520; -fx-max-width: 520; -fx-padding: 10; -fx-alignment: center-right;");
+                hBox.setAlignment(Pos.CENTER_RIGHT);
+                hBox.setPadding(new Insets(5, 5, 0, 10));
 
-                ImageView imageView = new ImageView(new Image(new FileInputStream(selectedFile)));
-                imageView.setStyle("-fx-padding: 10px;");
-                imageView.setFitHeight(180);
-                imageView.setFitWidth(100);
+                Text text = new Text(msgToSend);
+                text.setStyle("-fx-font-size: 14");
+                TextFlow textFlow = new TextFlow(text);
 
-                hBox.getChildren().addAll(imageView);
+                textFlow.setStyle("-fx-background-color: #008080; -fx-font-weight: bold; -fx-color: white; -fx-background-radius: 20px");
+                textFlow.setPadding(new Insets(5, 10, 5, 10));
+                text.setFill(Color.color(1, 1, 1));
+
+                hBox.getChildren().add(textFlow);
+
+                HBox hBoxTime = new HBox();
+                hBoxTime.setAlignment(Pos.CENTER_RIGHT);
+                hBoxTime.setPadding(new Insets(0, 5, 5, 10));
+                String stringTime = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm"));
+                Text time = new Text(stringTime);
+                time.setStyle("-fx-font-size: 8");
+
+                hBoxTime.getChildren().add(time);
+
                 vBox.getChildren().add(hBox);
+                vBox.getChildren().add(hBoxTime);
 
-                sendImage(bytes);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+
+                try {
+                    dataOutputStream.writeUTF(clientName + ":" + msgToSend);
+                    dataOutputStream.flush();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+            txtMsg.clear();
         }
+    }
+
+
+    @FXML
+    private void btnSendOnAction(ActionEvent event) {
+        if(!sinhalaSelectBox.isSelected()) {
+            sendMsg(txtMsg.getText());
+        }else {
+            onActionSelectBox(new ActionEvent());
+        }
+
+        emojiAnchorpane.setVisible(false);
+    }
+
+    @FXML
+    void attachFileOnAction(ActionEvent actionEvent) throws IOException {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Select File to Open");
+        int userSelection = fileChooser.showOpenDialog(null);
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToOpen = fileChooser.getSelectedFile();
+            sendImage(fileToOpen.getPath(),lblName.getText());
+            System.out.println(fileToOpen.getPath() + " chosen.");
+        }
+
+    }
+
+    private void sendImage(String file,String sender) {
+        sendBy = sender;
+        File imageFile = new File(file);
+        Image image = new Image(imageFile.toURI().toString());
+        ImageView imageView = new ImageView(image);
+        imageView.setFitHeight(200);
+        imageView.setFitWidth(200);
+
+        HBox hBox = new HBox();
+
+        hBox.setPadding(new Insets(5, 5, 5, 10));
+        hBox.getChildren().add(imageView);
+        hBox.setAlignment(Pos.CENTER_RIGHT);
+
+        vBox.getChildren().add(hBox);
+
+        try {
+            dataOutputStream.writeUTF(file);
+            dataOutputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    void btnImojiOnAction() {emojiAnchorpane.setVisible(true);
+    }
+
+    public void onActionSelectBox(ActionEvent event) {
+        if(txtMsg.getText().matches("^[a-zA-Z ]*$")){
+            if(sinhalaSelectBox.isSelected()) {
+                translateMsg(txtMsg.getText());
+            }
+
+        }else{
+            new Alert(Alert.AlertType.ERROR, "Your Message Is Not Valid Text !!!").show();
+        }
+
+    }
+
+    private void translateMsg(String text) {
+        translationLogic tr = new translationLogic();
+        sendMsg(tr.convertText(text));
+    }
+
+    public void txtmsgOnAction(ActionEvent event) {
+        btnSendOnAction(event);
     }
 }

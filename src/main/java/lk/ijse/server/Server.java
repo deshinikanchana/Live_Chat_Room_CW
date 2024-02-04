@@ -1,6 +1,7 @@
 package lk.ijse.server;
 
-import lk.ijse.client.ClientHandler;
+
+import lk.ijse.client.Client;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -13,24 +14,24 @@ public class Server {
     private Socket socket;
     private static Server server;
 
-    private List<ClientHandler> clients = new ArrayList<>();
+    private List<Client> clients = new ArrayList<>();
 
     private Server() throws IOException {
-        serverSocket = new ServerSocket(3001);
+        serverSocket = new ServerSocket(3030);
     }
 
     public static Server getInstance() throws IOException {
-        return server!=null? server:(server=new Server());
+        return server != null? server:(server=new Server());
     }
 
     public void makeSocket(){
         while (!serverSocket.isClosed()){
-            try{
+            try {
                 socket = serverSocket.accept();
-                ClientHandler clientHandler = new ClientHandler(socket);
-                clients.add(clientHandler);
-                System.out.println("client socket accepted "+socket.toString());
-            } catch (IOException e){
+                Client client = new Client(socket,clients);
+                clients.add(client);
+                System.out.println("client socket accepted" + socket.toString());
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }

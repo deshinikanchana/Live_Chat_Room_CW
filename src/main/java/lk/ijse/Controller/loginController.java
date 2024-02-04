@@ -1,5 +1,4 @@
 package lk.ijse.Controller;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,8 +10,8 @@ import lk.ijse.server.Server;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Pattern;
 
 
 public class loginController {
@@ -33,20 +32,20 @@ public class loginController {
     }
 
     public void btnLoginOnAction(ActionEvent event) throws IOException {
-        if(!txtUserName.getText().isEmpty()) {
-
+        if (!txtUserName.getText().isEmpty()) {
             names.add(txtUserName.getText());
 
             Stage stage = new Stage();
-            stage.setScene(new Scene(FXMLLoader.load(this.getClass().getResource("/View/ClientChatForm.fxml"))));
-
+            stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/View/ClientChatForm.fxml"))));
 
             stage.centerOnScreen();
-            stage.setTitle(txtUserName.getText() + " 's Chat Room");
+            stage.setTitle(txtUserName.getText() + "'s Chat Room");
             stage.setOnCloseRequest(windowEvent -> {
-                for (String nm:names) {
-                    if(stage.getTitle().startsWith(nm)) {
-                        names.remove(nm);
+                Iterator<String> iterator = names.iterator();
+                while (iterator.hasNext()) {
+                    String nm = iterator.next();
+                    if (stage.getTitle().startsWith(nm)) {
+                        iterator.remove();
                         System.out.println(nm + " left from the chat !!!");
                         return;
                     }
@@ -55,10 +54,12 @@ public class loginController {
             stage.show();
 
             txtUserName.setText(" ");
-
-
-        }else{
+        } else {
             new Alert(Alert.AlertType.ERROR, "User Name Is Required !!!").show();
         }
+    }
+
+    public void userNameOnAction(ActionEvent event) throws IOException {
+        btnLoginOnAction(event);
     }
 }
