@@ -144,7 +144,7 @@ public class chatRoomController {
 
             Text text = new Text(msgFromServer);
             TextFlow textFlow = new TextFlow(text);
-            textFlow.setStyle("-fx-background-color: #42B98D; -fx-font-weight: bold; -fx-background-radius: 20px");
+            textFlow.setStyle("-fx-background-color: #E2ECE7; -fx-font-weight: bold; -fx-background-radius: 20px");
             textFlow.setPadding(new Insets(5,10,5,10));
             text.setFill(Color.color(0,0,0));
 
@@ -172,7 +172,7 @@ public class chatRoomController {
                 text.setStyle("-fx-font-size: 14");
                 TextFlow textFlow = new TextFlow(text);
 
-                textFlow.setStyle("-fx-background-color: #008080; -fx-font-weight: bold; -fx-color: white; -fx-background-radius: 20px");
+                textFlow.setStyle("-fx-background-color: #507D69; -fx-font-weight: bold; -fx-color: white; -fx-background-radius: 20px");
                 textFlow.setPadding(new Insets(5, 10, 5, 10));
                 text.setFill(Color.color(1, 1, 1));
 

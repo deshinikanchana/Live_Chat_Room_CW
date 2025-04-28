@@ -15,13 +15,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="pane" prefHeight="708.0" prefWidth="431.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.Controller.chatRoomController">
+<AnchorPane fx:id="pane" prefHeight="708.0" prefWidth="431.0" style="-fx-background-color: #A9BBA9;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.Controller.chatRoomController">
     <children>
-      <ImageView fitHeight="858.0" fitWidth="1012.0" layoutX="-580.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assests/newBG.jpg" />
-         </image>
-      </ImageView>
         <TextField fx:id="txtMsg" layoutX="60.0" layoutY="619.0" onAction="#txtmsgOnAction" prefHeight="50.0" prefWidth="247.0" promptText="Enter message here" style="-fx-background-color: white; -fx-border-color: #F5F5F5;" />
         <ScrollPane layoutX="14.0" layoutY="107.0" prefHeight="502.0" prefWidth="404.0">
             <content>
